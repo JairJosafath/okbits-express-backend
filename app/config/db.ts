@@ -11,7 +11,12 @@ const PASSWORD = process.env.PASSWORD||"";
 
 export const sequelize = new Sequelize(DB, USER, PASSWORD, {
     host: HOST,
-    dialect: "postgres"
+    dialect: "postgres",
+    define: {
+      "createdAt": "createdat",
+      "updatedAt": "updatedat"
+    } /*don't forget to add host, port, dialect, etc.*/
+  
   });
 
   export async function connect(){

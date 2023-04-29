@@ -1,7 +1,18 @@
 import  { Sequelize, DataTypes,Model } from 'sequelize';
 import { sequelize } from '../config/db';
 
-export class FileModel extends Model {};
+ class FileModel extends Model {
+  id?:number;
+    name?: string;
+    size?: string;
+    path?: string;
+    data_UNL?: Buffer;
+    data_PDF?: Buffer;
+    data_JSON?: Buffer;
+    dateCreated?: Date;
+    dateModified?: Date;
+    owner?: string;
+ };
 
 FileModel.init({
     id: {
@@ -11,41 +22,33 @@ FileModel.init({
     },
     name: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: true
     },
     size: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: true
     },
     path: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: true
     },
-    data_UNL: {
+    data_unl: {
       type: DataTypes.BLOB
     },
-    data_PDF: {
+    data_pdf: {
       type: DataTypes.BLOB
     },
-    data_JSON: {
+    data_json: {
       type: DataTypes.BLOB
-    },
-    dateCreated: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW
-    },
-    dateModified: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW
     },
     owner: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: true
     }
   },{
     sequelize, 
-    modelName: 'File' 
+    modelName: 'File',
+    tableName:'files' 
   })
   
+  export default FileModel;
