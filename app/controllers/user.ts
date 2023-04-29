@@ -1,4 +1,3 @@
-import { sequelize } from "../config/db";
 import UserModel from "../models/user";
 import { UserI } from "../utils/types";
 
@@ -9,8 +8,8 @@ export async function addUser(data: UserI) {
     return User.toJSON();
   } catch (e) {
     console.log("couldnt add user", e);
+    return null;
   }
-  return null;
 }
 export async function getUserByID(id: number) {
   try {
@@ -22,8 +21,8 @@ export async function getUserByID(id: number) {
     return User?.toJSON();
   } catch (e) {
     console.log("could not retrieve record", e);
+    return null;
   }
-  return null;
 }
 
 export async function deleteUserByID(id: number) {

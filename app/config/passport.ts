@@ -1,5 +1,3 @@
-const LocalStrategy = require("passport-local").Strategy;
-const validPassword = require("../lib/passwordUtils").validPassword;
 declare global {
   namespace Express {
     interface User {

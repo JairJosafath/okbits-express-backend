@@ -28,6 +28,6 @@ CREATE TABLE users(
   CREATE TABLE sessions (
   id SERIAL PRIMARY KEY,
   session_id TEXT UNIQUE NOT NULL,
-  expires TIMESTAMP NOT NULL,
+  expire TIMESTAMP NOT NULL,
   data JSONB NOT NULL
 );

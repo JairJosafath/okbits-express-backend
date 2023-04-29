@@ -1,11 +1,12 @@
 import express from "express";
 import { generatePasswordHash } from "../utils/password";
-import UserModel from "../models/user";
 import { addUser } from "../controllers/user";
+import { close } from "../config/db";
+import passport from "passport";
 
 export const userRouter = express.Router();
 
-userRouter.post("/signin", (req, res) => {
+userRouter.post("/signin", passport.authenticate("local"), (req, res) => {
   res.send("signin");
 });
 
