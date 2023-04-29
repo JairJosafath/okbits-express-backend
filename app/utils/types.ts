@@ -10,3 +10,15 @@ export type FileI = {
     updatedat?: Date;
     owner?: string;
   }
+
+  export type UserI = {
+    id?:number;
+      username?: string;
+      alias?: string;
+      profile?: string;
+      hash?: string;
+      salt?: string;
+      owner?: string;
+      createdat?: Date;
+    updatedat?: Date;
+   };
