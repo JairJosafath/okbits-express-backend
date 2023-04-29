@@ -1,46 +1,43 @@
-import  { Sequelize, DataTypes,Model } from 'sequelize';
-import { sequelize } from '../config/db';
+import { Sequelize, DataTypes, Model } from "sequelize";
+import { sequelize } from "../config/db";
 
- class UserModel extends Model {
-  id?:number;
-    username?: string;
-    alias?: string;
-    profile?: string;
-    hash?: string;
-    salt?: string;
-    owner?: string;
- };
+class UserModel extends Model {
+  id?: number;
+  username?: string;
+  alias?: string;
+  profile?: string;
+  hash?: string;
+  salt?: string;
+}
 
- UserModel.init(
+UserModel.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     username: {
       type: DataTypes.STRING,
     },
     alias: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     profile: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     hash: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     salt: {
-      type: DataTypes.STRING
-    },
-    owner: {
       type: DataTypes.STRING,
-    }
+    },
   },
   {
-    sequelize, 
-    modelName: 'User',
-    tableName:'users' 
-  })
-  
-  export default UserModel;
+    sequelize,
+    modelName: "User",
+    tableName: "users",
+  }
+);
+
+export default UserModel;

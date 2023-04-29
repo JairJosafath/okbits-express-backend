@@ -5,6 +5,7 @@ CREATE TABLE users(
     profile TEXT,
     hash TEXT NOT NULL,
     salt TEXT NOT NULL,
+    role TEXT,
     createdAt TIMESTAMP NOT NULL DEFAULT NOW(),
     updatedAt TIMESTAMP NOT NULL DEFAULT NOW()
   );
@@ -23,3 +24,10 @@ CREATE TABLE users(
     owner TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
+
+  CREATE TABLE sessions (
+  id SERIAL PRIMARY KEY,
+  session_id TEXT UNIQUE NOT NULL,
+  expires TIMESTAMP NOT NULL,
+  data JSONB NOT NULL
+);

@@ -1,17 +1,33 @@
 import express from "express";
-import { addFile, deleteFileByID, getFileByID, updateFileByID } from "../controllers/file";
+import { generatePasswordHash } from "../utils/password";
+import UserModel from "../models/user";
+import { addUser } from "../controllers/user";
 
-export const fileRouter = express.Router();
+export const userRouter = express.Router();
 
-fileRouter.get("/:id", async(req,res)=>{
-    res.send(await getFileByID(parseInt(req.params.id)));
+userRouter.post("/signin", (req, res) => {
+  res.send("signin");
 });
-fileRouter.post("/:id/update", async(req,res)=>{
-    res.send(await updateFileByID(parseInt(req.params.id),req.body));
+
+userRouter.post("/signout", (req, res) => {
+  res.send("signout");
 });
-fileRouter.delete("/:id",async(req,res)=>{
-    res.send(deleteFileByID(parseInt(req.params.id)));
-});
-fileRouter.post("/add", async (req,res)=>{
-    res.send(addFile(req.body));
+
+userRouter.post("/signup", async (req, res) => {
+  const { password, username } = req.body;
+
+  const { salt, hash } = generatePasswordHash(password);
+
+  try {
+    const result = addUser({
+      username,
+      alias: username,
+      salt,
+      hash,
+    });
+    res.send(result);
+  } catch (e) {
+    console.log(e);
+    res.send(e);
+  }
 });

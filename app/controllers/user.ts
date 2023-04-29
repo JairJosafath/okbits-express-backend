@@ -6,7 +6,7 @@ export async function addUser(data: UserI) {
   try {
     const User = await UserModel.create(data);
     console.log(User.toJSON(), "add");
-    return User?.id;
+    return User.toJSON();
   } catch (e) {
     console.log("couldnt add user", e);
   }
@@ -19,7 +19,7 @@ export async function getUserByID(id: number) {
       console.log("record not found with id " + id);
     }
     console.log(User?.toJSON(), "update");
-    return User;
+    return User?.toJSON();
   } catch (e) {
     console.log("could not retrieve record", e);
   }
