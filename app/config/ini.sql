@@ -26,8 +26,7 @@ CREATE TABLE users(
   );
 
   CREATE TABLE sessions (
-  id SERIAL PRIMARY KEY,
-  session_id TEXT UNIQUE NOT NULL,
-  expire TIMESTAMP NOT NULL,
-  data JSONB NOT NULL
+  sid TEXT PRIMARY KEY,
+  sess JSON ,
+  expire TIMESTAMP NOT NULL DEFAULT NOW()
 );
