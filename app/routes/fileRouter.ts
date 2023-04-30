@@ -18,5 +18,7 @@ fileRouter.delete("/:id", async (req, res) => {
   res.send(deleteFileByID(parseInt(req.params.id)));
 });
 fileRouter.post("/add", async (req, res) => {
-  res.send(addFile(req.body));
+  console.log("file", req.body);
+  res.send({ msg: "success" });
+  // res.send(addFile(req.body));
 });

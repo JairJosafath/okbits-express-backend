@@ -31,7 +31,7 @@ async function verifyCallback(
       return done(null, false);
     }
 
-    const isValid = isPasswordValid(password, user.hash, user.salt);
+    const isValid = isPasswordValid(password, user.hash || "", user.salt || "");
 
     if (isValid) {
       // auth was succesful

@@ -7,8 +7,10 @@ import session from "express-session";
 import "./config/passport";
 import pgsession from "connect-pg-simple";
 import dotenv from "dotenv";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 const port = 3001;
 
 const psqlStore = new (pgsession(session))({
@@ -34,6 +36,10 @@ app.use(passport.session());
 
 app.use("/files", isAuthenticated, fileRouter);
 app.use(userRouter);
+
+app.get("/test", (req, res) => {
+  res.send(JSON.stringify("<p>hey!<p>"));
+});
 
 app.listen(port, () => {
   console.log("listening on port: " + port);

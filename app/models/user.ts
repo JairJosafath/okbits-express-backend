@@ -2,12 +2,12 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/db";
 
 class UserModel extends Model {
-  id?: number;
-  username?: string;
-  alias?: string;
-  profile?: string;
-  hash?: string;
-  salt?: string;
+  declare id?: number;
+  declare username?: string;
+  declare alias?: string;
+  declare profile?: string;
+  declare hash?: string;
+  declare salt?: string;
 }
 
 UserModel.init(
