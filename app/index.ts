@@ -10,7 +10,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 const port = 3001;
 
 const psqlStore = new (pgsession(session))({
@@ -21,12 +25,12 @@ app.use(json());
 
 app.use(
   session({
-    secret: process.env.SECRET || "",
+    secret: "some secret",
     resave: false,
     saveUninitialized: true,
     store: psqlStore,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // Equals 1 day (1 day * 24 hr/1 day * 60 min/1 hr * 60 sec/1 min * 1000 ms / 1 sec)
+      maxAge: 1000 * 60 * 60 * 24,
     },
   })
 );
@@ -34,8 +38,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/files", isAuthenticated, fileRouter);
 app.use(userRouter);
+app.use("/files", isAuthenticated, fileRouter);
 
 app.get("/test", (req, res) => {
   res.send(JSON.stringify("<p>hey!<p>"));

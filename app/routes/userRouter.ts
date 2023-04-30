@@ -5,14 +5,36 @@ import passport from "passport";
 
 export const userRouter = express.Router();
 
+// userRouter.post(
+//   "/signin",
+//   passport.authenticate("local", { failureRedirect: "/login-failure" }),
+//   async function (req, res) {
+//     const user = await findUserByUsername(req.body.username);
+//     if (user) {
+//       const { id, username, profile } = user;
+//       console.log("req.user", req.user);
+//       res.send({ msg: "Success", user: { id, username, profile } });
+//     } else {
+//       res.send({ msg: "Failed", user: {} });
+//     }
+//   }
+// );
+
 userRouter.post(
   "/signin",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", { failureRedirect: "/login-failure" }),
   async function (req, res) {
     const user = await findUserByUsername(req.body.username);
-    if (user) {
+    if (req.user && user) {
       const { id, username, profile } = user;
-      res.send({ msg: "Success", user: { id, username, profile } });
+      console.log("req.user", req.user);
+      req.login(req.user, function (err) {
+        if (err) {
+          console.error(err);
+          return res.send({ msg: "Failed", user: {} });
+        }
+        return res.send({ msg: "Success", user: { id, username, profile } });
+      });
     } else {
       res.send({ msg: "Failed", user: {} });
     }
@@ -22,8 +44,18 @@ userRouter.post(
 userRouter.get("/login-failure", (req, res) => {
   res.send({ body: { msg: "Auth unsuccesful" } });
 });
+userRouter.get("/login-success", async (req, res) => {
+  // const username = req.body.username.json;
+  console.log("body", req.body);
+  // const user = await findUserByUsername(username);
+  // if (user) {
+  //   const { id, username, profile } = user;
+  //   res.send({ body: { msg: "Success", user: { id, username, profile } } });
+  // }
+  res.send({ body: { msg: "Failed", user: {} } });
+});
 
-userRouter.get("/signout", (req, res, next) => {
+userRouter.post("/signout", (req, res, next) => {
   req.logOut(next);
   res.send("signout");
 });
