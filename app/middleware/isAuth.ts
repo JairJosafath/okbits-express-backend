@@ -5,7 +5,7 @@ export const isAuthenticated = function (
   res: Response,
   next: NextFunction
 ) {
-  console.log({ session: req.session, user: req.user, auth: req.authInfo });
+  // console.log({ session: req.session, user: req.user, auth: req.authInfo });
   try {
     if (req.isAuthenticated()) next();
     else res.status(401).json({ msg: "unauthorized" });
