@@ -12,7 +12,7 @@ import cors from "cors";
 const app = express();
 const corsOptions = {
   origin: "http://localhost:3000",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true,
 };
 app.use(cors(corsOptions));
 const port = 3001;
@@ -22,7 +22,7 @@ const psqlStore = new (pgsession(session))({
   tableName: "sessions",
 });
 app.use(json());
-
+app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: "some secret",

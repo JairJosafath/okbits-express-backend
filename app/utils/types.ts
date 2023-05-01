@@ -1,6 +1,7 @@
 export type FileI = {
   id?: number;
   name: string;
+  user_id: string | number;
   size?: string;
   path?: string;
   data_unl?: Buffer;
