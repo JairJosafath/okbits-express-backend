@@ -1,12 +1,13 @@
 export type FileI = {
   id?: number;
   name: string;
+  alias: string;
   user_id: string | number;
-  size?: string;
+  size?: number;
   path?: string;
-  data_unl?: Buffer;
-  data_pdf?: Buffer;
-  data_json?: Buffer;
+  path_unl?: string;
+  data_pdf?: string;
+  data_json?: string;
   createdat?: Date;
   updatedat?: Date;
   owner?: string;

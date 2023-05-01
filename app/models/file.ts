@@ -25,6 +25,10 @@ FileModel.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    alias: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -33,17 +37,13 @@ FileModel.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    path: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    data_unl: {
+    path_unl: {
       type: DataTypes.BLOB,
     },
-    data_pdf: {
+    path_pdf: {
       type: DataTypes.BLOB,
     },
-    data_json: {
+    path_json: {
       type: DataTypes.BLOB,
     },
     owner: {

@@ -28,10 +28,10 @@ export async function getFileByID(id: number) {
 export async function getFilesByUser(userid: number) {
   try {
     const Files = await FileModel.findAll({ where: { user_id: userid } });
-    if (!File) {
+    if (Files.length < 1) {
       console.log("record not found with id " + userid);
     }
-    console.log(Files, "update");
+    console.log(Files, "files by user");
     return Files;
   } catch (e) {
     console.log("could not retrieve record", e);
@@ -53,9 +53,9 @@ export async function deleteFileByID(id: number) {
 export async function updateFileByID(id: number, data: FileI) {
   try {
     const File = await getFileByID(id);
-    File?.set({ ...data });
-    await File?.save();
-    console.log("updated");
+    File?.set({ File, ...data });
+    const res = await File?.save();
+    console.log("update res", res);
     return true;
   } catch (e) {
     console.log("could not update record", e);
