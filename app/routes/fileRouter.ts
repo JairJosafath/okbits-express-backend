@@ -8,6 +8,8 @@ import {
   updateFileByID,
 } from "../controllers/file";
 import path from "path";
+import { shareEmail } from "../service/shareEmail";
+import convertUNL from "../service/convertUNL";
 
 const upload = multer({ dest: "./storage" });
 
@@ -57,15 +59,18 @@ fileRouter.delete("/:id", async (req, res) => {
 fileRouter.post("/add", upload.single("file"), async (req, res) => {
   if (req.file) {
     const { originalname, buffer, size, destination, filename } = req.file;
-    res.send(
-      addFile({
-        name: originalname,
-        alias: `${req.user?.id}/files/${filename}`,
-        path_unl: destination,
-        size: size,
-        user_id: req.user?.id || "",
-      })
-    );
+
+    convertUNL(destination + "/de3354825238b3a6a1b6d286dc413b68");
+    res
+      .send
+      // addFile({
+      //   name: originalname,
+      //   alias: `${req.user?.id}/files/${filename}`,
+      //   path_unl: destination,
+      //   size: size,
+      //   user_id: req.user?.id || "",
+      // })
+      ();
   } else {
     res.send("an error occurred");
   }
@@ -76,4 +81,10 @@ fileRouter.get("/storage/:filename", async (req, res) => {
   const dirname = path.resolve();
   const fullfilepath = path.join(dirname, "storage/" + filename);
   return res.sendFile(fullfilepath);
+});
+
+fileRouter.post("/share/:id", async (req, res) => {
+  console.log(req.body);
+  const resp = shareEmail(req.body);
+  res.send(resp);
 });

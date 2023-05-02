@@ -31,3 +31,15 @@ export type SessionI = {
   expires: Date;
   data: object;
 };
+
+export interface EmailI {
+  to?: string;
+  subject?: string;
+  cc?: string;
+  content?: string;
+  attached?: {
+    pdf?: boolean;
+    csv?: boolean;
+    json?: boolean;
+  };
+}
