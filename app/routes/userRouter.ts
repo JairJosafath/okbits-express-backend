@@ -1,7 +1,8 @@
 import express from "express";
 import { generatePasswordHash } from "../utils/password";
-import { addUser, findUserByUsername } from "../controllers/user";
+import { addUser, findUserByUsername, getUserByID } from "../controllers/user";
 import passport from "passport";
+import { isAuthenticated } from "../middleware/isAuth";
 
 export const userRouter = express.Router();
 
@@ -19,6 +20,17 @@ export const userRouter = express.Router();
 //     }
 //   }
 // );
+userRouter.get("/auto-signin", isAuthenticated, async (req, res) => {
+  if (req.user?.id) {
+    const user = await getUserByID(req.user?.id);
+    if (req.user && user) {
+      const { id, username, profile } = user;
+      res.send({ msg: "Success", user: { id, username, profile } });
+    } else {
+      res.send({ msg: "Failed", user: {} });
+    }
+  }
+});
 
 userRouter.post(
   "/signin",
@@ -55,9 +67,9 @@ userRouter.get("/login-success", async (req, res) => {
   res.send({ body: { msg: "Failed", user: {} } });
 });
 
-userRouter.post("/signout", (req, res, next) => {
+userRouter.get("/signout", (req, res, next) => {
   req.logOut(next);
-  res.send("signout");
+  res.send({ msg: "signout" });
 });
 
 userRouter.post("/signup", async (req, res) => {

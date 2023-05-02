@@ -4,6 +4,7 @@ import csv from "csvtojson";
 import pdfMake from "pdfmake";
 import { TDocumentDefinitions } from "pdfmake/interfaces";
 import { promises as fsPromises } from "fs";
+import path from "path";
 
 async function UNL2CSV(inputFile: string) {
   const writeStream = fs.createWriteStream(inputFile + "-csv");
@@ -31,7 +32,7 @@ function CSV2PDF(inputFile: string) {
             layout: "lightHorizontalLines",
             table: {
               headerRows: 1,
-              widths: Array(jsonObj[0].length).fill("*"),
+              // widths: Array(jsonObj[0].length).fill("*"),
               body: [
                 Object.keys(jsonObj[0]),
                 ...jsonObj.map((obj) => Object.values(obj)),
@@ -40,18 +41,27 @@ function CSV2PDF(inputFile: string) {
           },
         ],
       };
-      const pdfMaker = new pdfMake({});
+      const pdfMaker = new pdfMake({
+        Helvetica: {
+          normal: path.join(__dirname, "../font/Helvetica.ttf"),
+          bold: path.join("font/Helvetica-Bold"),
+          italics: path.join("font/Helvetica-Oblique"),
+          bolditalics: path.join("font/Helvetica-BoldOblique"),
+        },
+      });
       const pdfDoc = pdfMaker.createPdfKitDocument(pdfDocDefinition);
 
       // Write the PDF file
-      const pdfFilePath = inputFile.replace(".csv", ".pdf");
+
+      const pdfFilePath = inputFile.replace("csv", "pdf");
       pdfDoc.pipe(fs.createWriteStream(pdfFilePath));
+      console.log(`PDF file created at ${pdfFilePath}`);
       pdfDoc.end();
     });
 }
 
 function CSV2JSON(inputFile: string) {
-  const jsonFilePath = "";
+  const jsonFilePath = inputFile.replace("-csv", "-json");
   try {
     csv()
       .fromFile(inputFile)
@@ -72,4 +82,5 @@ function CSV2JSON(inputFile: string) {
 export default async function convertUNL(filename: string) {
   const csvFile = await UNL2CSV(filename);
   CSV2PDF(csvFile);
+  CSV2JSON(csvFile);
 }

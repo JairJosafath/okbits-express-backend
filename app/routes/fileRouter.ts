@@ -60,17 +60,15 @@ fileRouter.post("/add", upload.single("file"), async (req, res) => {
   if (req.file) {
     const { originalname, buffer, size, destination, filename } = req.file;
 
-    convertUNL(destination + "/de3354825238b3a6a1b6d286dc413b68");
-    res
-      .send
-      // addFile({
-      //   name: originalname,
-      //   alias: `${req.user?.id}/files/${filename}`,
-      //   path_unl: destination,
-      //   size: size,
-      //   user_id: req.user?.id || "",
-      // })
-      ();
+    convertUNL(destination + `/${filename}`);
+    res.send;
+    addFile({
+      name: originalname,
+      alias: `${req.user?.id}/files/${filename}`,
+      path_unl: destination,
+      size: size,
+      user_id: req.user?.id || "",
+    });
   } else {
     res.send("an error occurred");
   }
@@ -84,7 +82,39 @@ fileRouter.get("/storage/:filename", async (req, res) => {
 });
 
 fileRouter.post("/share/:id", async (req, res) => {
-  console.log(req.body);
-  const resp = shareEmail(req.body);
+  const { email } = req.body;
+  const { pdf, csv, json } = email.attached;
+  const attachments = [];
+  const file = await getFileByID(parseInt(req.params.id));
+  const temp: any = file?.get("alias");
+  const alias: string = temp;
+  if (pdf) {
+    attachments.push({
+      filename: "pdf-output.pdf",
+      path: path.join(
+        __dirname,
+        `../../storage/${alias.replace(req.user?.id + "/files/", "")}-pdf`
+      ),
+    });
+  }
+  if (csv) {
+    attachments.push({
+      filename: "csv-output.csv",
+      path: path.join(
+        __dirname,
+        `../../storage/${alias.replace(req.user?.id + "/files/", "")}-csv`
+      ),
+    });
+  }
+  if (json) {
+    attachments.push({
+      filename: "json-output.json",
+      path: path.join(
+        __dirname,
+        `../../storage/${alias.replace(req.user?.id + "/files/", "")}-json`
+      ),
+    });
+  }
+  const resp = shareEmail({ ...email, attachments });
   res.send(resp);
 });

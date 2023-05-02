@@ -22,15 +22,7 @@ export function shareEmail(email: EmailI) {
   transport.sendMail(
     {
       to: "jairjosafath@gmail.com",
-      subject: "qweqwe",
-      cc: "jairjosafath@gmail.com",
-      text: "qweqwe",
-      attachments: [
-        {
-          filename: "test.txt",
-          path: path.join(__dirname, "../../storage/test.txt"),
-        },
-      ],
+      ...email,
     },
     (error, info) => {
       if (error) {
@@ -39,6 +31,29 @@ export function shareEmail(email: EmailI) {
       console.log("Message sent: %s", info.messageId);
     }
   );
+  // transport.sendMail(
+  //   {
+  //     to: "jairjosafath@gmail.com",
+  //     subject: "qweqwe",
+  //     cc: "jairjosafath@gmail.com",
+  //     text: "qweqwe",
+  //     attachments: [
+  //       {
+  //         filename: "pdf-output.pdf",
+  //         path: path.join(
+  //           __dirname,
+  //           "../../storage/de3354825238b3a6a1b6d286dc413b68-pdf"
+  //         ),
+  //       },
+  //     ],
+  //   },
+  //   (error, info) => {
+  //     if (error) {
+  //       return console.log(error);
+  //     }
+  //     console.log("Message sent: %s", info.messageId);
+  //   }
+  // );
 
   // const filePath = path.join(__dirname, "../../storage/test.txt");
   // let file = fs.createReadStream(filePath);
