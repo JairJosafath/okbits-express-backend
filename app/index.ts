@@ -39,9 +39,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(userRouter);
-app.use("/files", isAuthenticated, isAuthorized, fileRouter);
+app.use("/files", isAuthenticated, fileRouter);
 
-app.get("/test", (req, res) => {
+app.get("/test", isAuthenticated, (req, res) => {
   res.send(JSON.stringify("<p>hey!<p>"));
 });
 

@@ -18,7 +18,7 @@ export async function getUserByID(id: number) {
       console.log("record not found with id " + id);
     }
     console.log(User?.toJSON(), "update");
-    return User?.toJSON();
+    return User;
   } catch (e) {
     console.log("could not retrieve record", e);
     return null;

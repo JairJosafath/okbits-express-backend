@@ -10,16 +10,19 @@ import {
 import path from "path";
 import { shareEmail } from "../service/shareEmail";
 import convertUNL from "../service/convertUNL";
+import { isAuthorized } from "../middleware/isAuth";
 
 //store files in express/storage
 const upload = multer({ dest: "./storage" });
 
 export const fileRouter = express.Router();
 
-fileRouter.get("/:id", async (req, res) => {
+fileRouter.get("/:id", isAuthorized.single, async (req, res) => {
   if (req.user?.id)
     res.send(await getFileByID(parseInt(req.params.id), req.user?.id));
 });
+
+// this route uses the authenticated user id, so the owner can only see their own files
 fileRouter.get("/", async (req, res) => {
   if (req?.user?.id) {
     res.send(
@@ -29,44 +32,53 @@ fileRouter.get("/", async (req, res) => {
     res.send("an error occurred");
   }
 });
-fileRouter.post("/update/:id", upload.single("file"), async (req, res) => {
-  if (req.file) {
-    const { originalname, buffer, size, destination, filename } = req.file;
-    const { name } = req.body;
-    // console.log({
-    //   originalname,
-    //   buffer,
-    //   size,
-    //   destination,
-    //   filename,
-    //   body: req.body,
-    // });
-    convertUNL(destination + `/${filename}`);
-    if (req.user?.id)
-      res.send(
-        updateFileByID(
-          parseInt(req.params.id),
-          {
-            name: name,
-            alias: `${req.user?.id}/files/${filename}`,
-            path_unl: destination,
-            size: size,
-            user_id: req.user?.id || "",
-          },
-          req.user.id
-        )
-      );
-  } else {
-    res.send("an error occurred");
+
+fileRouter.post(
+  "/update/:id",
+  isAuthorized.single,
+  upload.single("file"),
+  async (req, res) => {
+    if (req.file) {
+      const { originalname, buffer, size, destination, filename } = req.file;
+      const { name } = req.body;
+      // console.log({
+      //   originalname,
+      //   buffer,
+      //   size,
+      //   destination,
+      //   filename,
+      //   body: req.body,
+      // });
+      convertUNL(destination + `/${filename}`);
+      if (req.user?.id)
+        res.send(
+          updateFileByID(
+            parseInt(req.params.id),
+            {
+              name: name,
+              alias: `${req.user?.id}/files/${filename}`,
+              path_unl: destination,
+              size: size,
+              user_id: req.user?.id || "",
+            },
+            req.user.id
+          )
+        );
+    } else {
+      res.send("an error occurred");
+    }
+    // // res.send(await updateFileByID(parseInt(req.params.id), req.body));
+    // console.log;
+    // res.send("updateeeee");
   }
-  // // res.send(await updateFileByID(parseInt(req.params.id), req.body));
-  // console.log;
-  // res.send("updateeeee");
-});
-fileRouter.delete("/:id", async (req, res) => {
+);
+
+fileRouter.delete("/:id", isAuthorized.single, async (req, res) => {
   if (req.user?.id && req.user)
     res.send(deleteFileByID(parseInt(req.params.id), req.user?.id));
 });
+
+//user creates data, any user authenticated can perform this action
 fileRouter.post("/add", upload.single("file"), async (req, res) => {
   if (req.file) {
     const { originalname, buffer, size, destination, filename } = req.file;
@@ -85,14 +97,15 @@ fileRouter.post("/add", upload.single("file"), async (req, res) => {
   }
 });
 
-fileRouter.get("/storage/:filename", async (req, res) => {
+// storage files are only exposed to owner or admin based on prefix e.g. filename: 1/files for user with id 1
+fileRouter.get("/storage/:filename", isAuthorized.storage, async (req, res) => {
   const { filename } = req.params;
   const dirname = path.resolve();
   const fullfilepath = path.join(dirname, "storage/" + filename);
   return res.sendFile(fullfilepath);
 });
 
-fileRouter.post("/share/:id", async (req, res) => {
+fileRouter.post("/share/:id", isAuthorized.single, async (req, res) => {
   const { email } = req.body;
   const { pdf, csv, json } = email.attached;
   const attachments = [];

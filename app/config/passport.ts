@@ -60,7 +60,7 @@ passport.deserializeUser<number>(async function (id, done) {
     const user = await getUserByID(id);
 
     if (user) {
-      done(null, user);
+      done(null, user.toJSON());
     }
   } catch (err) {
     // an error occurred

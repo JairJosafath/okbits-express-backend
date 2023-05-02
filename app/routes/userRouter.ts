@@ -67,9 +67,13 @@ userRouter.get("/login-success", async (req, res) => {
   res.send({ body: { msg: "Failed", user: {} } });
 });
 
-userRouter.get("/signout", (req, res, next) => {
-  req.logOut(next);
-  res.send({ msg: "signout" });
+userRouter.post("/signout", (req, res, next) => {
+  req.logOut(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
 });
 
 userRouter.post("/signup", async (req, res) => {
