@@ -16,11 +16,14 @@ const upload = multer({ dest: "./storage" });
 export const fileRouter = express.Router();
 
 fileRouter.get("/:id", async (req, res) => {
-  res.send(await getFileByID(parseInt(req.params.id)));
+  if (req.user?.id)
+    res.send(await getFileByID(parseInt(req.params.id), req.user?.id));
 });
 fileRouter.get("/", async (req, res) => {
   if (req?.user?.id) {
-    res.send(await getFilesByUser(parseInt(req.user.id.toString())));
+    res.send(
+      await getFilesByUser(parseInt(req.user.id.toString()), req.user.id)
+    );
   } else {
     res.send("an error occurred");
   }
@@ -37,15 +40,20 @@ fileRouter.post("/update/:id", upload.single("file"), async (req, res) => {
     //   filename,
     //   body: req.body,
     // });
-    res.send(
-      updateFileByID(parseInt(req.params.id), {
-        name: name,
-        alias: `${req.user?.id}/files/${filename}`,
-        path_unl: destination,
-        size: size,
-        user_id: req.user?.id || "",
-      })
-    );
+    if (req.user?.id)
+      res.send(
+        updateFileByID(
+          parseInt(req.params.id),
+          {
+            name: name,
+            alias: `${req.user?.id}/files/${filename}`,
+            path_unl: destination,
+            size: size,
+            user_id: req.user?.id || "",
+          },
+          req.user.id
+        )
+      );
   } else {
     res.send("an error occurred");
   }
@@ -54,7 +62,8 @@ fileRouter.post("/update/:id", upload.single("file"), async (req, res) => {
   // res.send("updateeeee");
 });
 fileRouter.delete("/:id", async (req, res) => {
-  res.send(deleteFileByID(parseInt(req.params.id)));
+  if (req.user?.id)
+    res.send(deleteFileByID(parseInt(req.params.id), req.user?.id));
 });
 fileRouter.post("/add", upload.single("file"), async (req, res) => {
   if (req.file) {
@@ -85,36 +94,38 @@ fileRouter.post("/share/:id", async (req, res) => {
   const { email } = req.body;
   const { pdf, csv, json } = email.attached;
   const attachments = [];
-  const file = await getFileByID(parseInt(req.params.id));
-  const temp: any = file?.get("alias");
-  const alias: string = temp;
-  if (pdf) {
-    attachments.push({
-      filename: "pdf-output.pdf",
-      path: path.join(
-        __dirname,
-        `../../storage/${alias.replace(req.user?.id + "/files/", "")}-pdf`
-      ),
-    });
+  if (req.user?.id) {
+    const file = await getFileByID(parseInt(req.params.id), req.user?.id);
+    const temp: any = file?.get("alias");
+    const alias: string = temp;
+    if (pdf) {
+      attachments.push({
+        filename: "pdf-output.pdf",
+        path: path.join(
+          __dirname,
+          `../../storage/${alias.replace(req.user?.id + "/files/", "")}-pdf`
+        ),
+      });
+    }
+    if (csv) {
+      attachments.push({
+        filename: "csv-output.csv",
+        path: path.join(
+          __dirname,
+          `../../storage/${alias.replace(req.user?.id + "/files/", "")}-csv`
+        ),
+      });
+    }
+    if (json) {
+      attachments.push({
+        filename: "json-output.json",
+        path: path.join(
+          __dirname,
+          `../../storage/${alias.replace(req.user?.id + "/files/", "")}-json`
+        ),
+      });
+    }
+    const resp = shareEmail({ ...email, attachments });
+    res.send(resp);
   }
-  if (csv) {
-    attachments.push({
-      filename: "csv-output.csv",
-      path: path.join(
-        __dirname,
-        `../../storage/${alias.replace(req.user?.id + "/files/", "")}-csv`
-      ),
-    });
-  }
-  if (json) {
-    attachments.push({
-      filename: "json-output.json",
-      path: path.join(
-        __dirname,
-        `../../storage/${alias.replace(req.user?.id + "/files/", "")}-json`
-      ),
-    });
-  }
-  const resp = shareEmail({ ...email, attachments });
-  res.send(resp);
 });

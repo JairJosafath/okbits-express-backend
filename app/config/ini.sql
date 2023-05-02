@@ -30,3 +30,11 @@ CREATE TABLE users(
   sess JSON ,
   expire TIMESTAMP NOT NULL DEFAULT NOW()
 );
+CREATE TABLE audit (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER,
+  action text,
+  timestamp TIMESTAMP,
+   createdAt TIMESTAMP NOT NULL DEFAULT NOW(),
+    updatedAt TIMESTAMP NOT NULL DEFAULT NOW()
+);

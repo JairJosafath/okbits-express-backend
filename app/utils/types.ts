@@ -43,3 +43,9 @@ export interface EmailI {
     json?: boolean;
   };
 }
+export type AuditI = {
+  id?: number;
+  user_id?: number;
+  action?: string;
+  timestamp?: Date;
+};
