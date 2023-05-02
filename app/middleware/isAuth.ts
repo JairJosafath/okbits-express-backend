@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { getUserByID } from "../controllers/user";
 
+// is user already authenticated?
 export const isAuthenticated = function (
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  // is user already authenticated?
   try {
     if (req.isAuthenticated()) next();
     else res.status(401).json({ msg: "unauthorized" });
@@ -41,7 +41,6 @@ export const isAdmin = async function (
   res: Response,
   next: NextFunction
 ) {
-  // is user authorized? owners can crud files, and admin can crud all
   try {
     if (req.user?.id) {
       const user = await getUserByID(req.user?.id);
