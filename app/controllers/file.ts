@@ -2,6 +2,7 @@ import { sequelize } from "../config/db";
 import FileModel from "../models/file";
 import { FileI } from "../utils/types";
 import { addAudit } from "./audit";
+import { unlink } from "node:fs/promises";
 
 export async function addFile(data: FileI) {
   try {
@@ -58,6 +59,16 @@ export async function getFilesByUser(userid: number, user_id: number | string) {
 export async function deleteFileByID(id: number, user_id: number | string) {
   try {
     const File = await getFileByID(id, user_id);
+    if (user_id.toString !== File?.get("user_id")) return;
+    try {
+      const temp: any = File?.get("alias");
+      const tempfile: string = temp;
+      ["-json", "-pdf", "-csv", ""].map((sufx) =>
+        unlink(`./storage/${tempfile.replace(`${user_id}/files/`, "")}${sufx}`)
+      );
+    } catch (error) {
+      console.error("there was an error:", error);
+    }
     await File?.destroy();
     console.log("deleted");
     addAudit({

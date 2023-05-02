@@ -31,10 +31,10 @@ function CSV2PDF(inputFile: string) {
           {
             layout: "lightHorizontalLines",
             table: {
-              headerRows: 1,
+              // headerRows: 1,
               // widths: Array(jsonObj[0].length).fill("*"),
               body: [
-                Object.keys(jsonObj[0]),
+                Object?.keys?.(jsonObj[0]),
                 ...jsonObj.map((obj) => Object.values(obj)),
               ],
             },

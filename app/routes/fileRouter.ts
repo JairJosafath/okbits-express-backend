@@ -40,6 +40,7 @@ fileRouter.post("/update/:id", upload.single("file"), async (req, res) => {
     //   filename,
     //   body: req.body,
     // });
+    convertUNL(destination + `/${filename}`);
     if (req.user?.id)
       res.send(
         updateFileByID(
@@ -62,7 +63,7 @@ fileRouter.post("/update/:id", upload.single("file"), async (req, res) => {
   // res.send("updateeeee");
 });
 fileRouter.delete("/:id", async (req, res) => {
-  if (req.user?.id)
+  if (req.user?.id && req.user)
     res.send(deleteFileByID(parseInt(req.params.id), req.user?.id));
 });
 fileRouter.post("/add", upload.single("file"), async (req, res) => {
