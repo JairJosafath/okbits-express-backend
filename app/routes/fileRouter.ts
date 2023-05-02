@@ -1,5 +1,5 @@
 import express from "express";
-import multer from "multer";
+import multer from "multer"; //used for storing files locally
 import {
   addFile,
   deleteFileByID,
@@ -11,6 +11,7 @@ import path from "path";
 import { shareEmail } from "../service/shareEmail";
 import convertUNL from "../service/convertUNL";
 
+//store files in express/storage
 const upload = multer({ dest: "./storage" });
 
 export const fileRouter = express.Router();
