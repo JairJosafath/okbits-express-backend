@@ -1,7 +1,7 @@
 import express, { json } from "express";
 import { fileRouter } from "./routes/fileRouter";
 import { userRouter } from "./routes/userRouter";
-import { isAuthenticated } from "./middleware/isAuth";
+import { isAuthenticated, isAuthorized } from "./middleware/isAuth";
 import passport from "passport";
 import session from "express-session";
 import "./config/passport";
@@ -39,7 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(userRouter);
-app.use("/files", isAuthenticated, fileRouter);
+app.use("/files", isAuthenticated, isAuthorized, fileRouter);
 
 app.get("/test", (req, res) => {
   res.send(JSON.stringify("<p>hey!<p>"));
