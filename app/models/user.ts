@@ -8,6 +8,7 @@ class UserModel extends Model {
   declare profile?: string;
   declare hash?: string;
   declare salt?: string;
+  declare role?: string;
 }
 
 UserModel.init(

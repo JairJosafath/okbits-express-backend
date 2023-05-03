@@ -23,6 +23,7 @@ export type UserI = {
   owner?: string;
   createdat?: Date;
   updatedat?: Date;
+  role?: string;
 };
 
 export type SessionI = {

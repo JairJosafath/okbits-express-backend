@@ -8,6 +8,7 @@ import "./config/passport";
 import pgsession from "connect-pg-simple";
 import dotenv from "dotenv";
 import cors from "cors";
+import { profileRouter } from "./routes/profile.router";
 
 const app = express();
 const corsOptions = {
@@ -39,6 +40,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(userRouter);
+app.use("/profile", isAuthenticated, profileRouter);
 app.use("/files", isAuthenticated, fileRouter);
 
 app.get("/test", isAuthenticated, (req, res) => {

@@ -59,7 +59,7 @@ export async function getFilesByUser(userid: number, user_id: number | string) {
 export async function deleteFileByID(id: number, user_id: number | string) {
   try {
     const File = await getFileByID(id, user_id);
-    if (user_id.toString !== File?.get("user_id")) return;
+
     try {
       const temp: any = File?.get("alias");
       const tempfile: string = temp;
@@ -71,12 +71,10 @@ export async function deleteFileByID(id: number, user_id: number | string) {
     }
     await File?.destroy();
     console.log("deleted");
-    addAudit({
+    return await addAudit({
       user_id: parseInt(user_id.toString()),
       action: `file with id ${id}, deleted from table: files`,
     });
-
-    return true;
   } catch (e) {
     console.log("could not delete record", e);
     return false;

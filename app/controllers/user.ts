@@ -49,9 +49,7 @@ export async function updateUserByID(id: number, data: UserI) {
   }
 }
 
-export async function findUserByUsername(
-  username: string
-): Promise<UserI | null> {
+export async function findUserByUsername(username: string) {
   try {
     const user = await UserModel.findOne({ where: { username } });
     if (user === null) {
@@ -59,7 +57,7 @@ export async function findUserByUsername(
       return null;
     } else {
       console.log("user found");
-      return user?.toJSON();
+      return user;
     }
   } catch (e) {
     console.log("err while trying to find user", e);

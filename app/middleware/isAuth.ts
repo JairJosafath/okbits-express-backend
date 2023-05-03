@@ -77,6 +77,7 @@ export const isAuthorized = {
       if (req.user?.id && req.params.filename) {
         const user = await getUserByID(req.user?.id);
         const resourceId = parseInt(req.params.filename.split("/")[0]);
+        // check if the user is the admin or really the user
         if (user?.get("role") === "admin" || user?.id === resourceId) {
           if (user?.id)
             req.params.filename = req.params.filename.replace(
