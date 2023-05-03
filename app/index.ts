@@ -9,7 +9,7 @@ import pgsession from "connect-pg-simple";
 import dotenv from "dotenv";
 import cors from "cors";
 import { profileRouter } from "./routes/profile.router";
-
+dotenv.config();
 const app = express();
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -26,7 +26,7 @@ app.use(json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: "some secret",
+    secret: process.env.SESSION_SECRET || "super secret",
     resave: false,
     saveUninitialized: true,
     store: psqlStore,
@@ -39,6 +39,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get("/files/storage/dummy", (req, res) => {
+  res.send({ dummy: "dummy" });
+});
 app.use(userRouter);
 app.use("/profile", isAuthenticated, profileRouter);
 app.use("/files", isAuthenticated, fileRouter);

@@ -8,15 +8,14 @@ export async function addFile(data: FileI) {
   try {
     const File = await FileModel.create(data);
     console.log(File.toJSON(), "add");
-    addAudit({
+    await addAudit({
       user_id: parseInt(data?.user_id.toString()),
       action: `add ${JSON.stringify(data)} to table: files`,
     });
-    return File?.id;
+    return File;
   } catch (e) {
     console.log("couldnt add file", e);
   }
-  return null;
 }
 export async function getFileByID(id: number, user_id: number | string) {
   try {
@@ -33,8 +32,8 @@ export async function getFileByID(id: number, user_id: number | string) {
     return File;
   } catch (e) {
     console.log("could not retrieve record", e);
+    return null;
   }
-  return null;
 }
 export async function getFilesByUser(userid: number, user_id: number | string) {
   try {
@@ -91,13 +90,13 @@ export async function updateFileByID(
     const File = await getFileByID(id, user_id);
     File?.set({ File, ...data });
     const res = await File?.save();
-    addAudit({
+    await addAudit({
       user_id: parseInt(user_id.toString()),
       action: `file with id ${id}, ${JSON.stringify(
         res
       )} updated from table: files`,
     });
-    return true;
+    return File;
   } catch (e) {
     console.log("could not update record", e);
     return false;

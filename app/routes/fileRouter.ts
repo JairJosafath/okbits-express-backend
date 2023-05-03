@@ -55,7 +55,7 @@ fileRouter.post(
       convertUNL(destination + `/${filename}`);
       if (req.user?.id)
         res.send(
-          updateFileByID(
+          await updateFileByID(
             parseInt(req.params.id),
             {
               name: name,
@@ -90,7 +90,7 @@ fileRouter.post("/add", upload.single("file"), async (req, res) => {
   if (req.file) {
     const { originalname, buffer, size, destination, filename } = req.file;
 
-    convertUNL(destination + `/${filename}`);
+    await convertUNL(destination + `/${filename}`);
     const result = await addFile({
       name: originalname,
       alias: `${req.user?.id}/files/${filename}`,
@@ -98,7 +98,7 @@ fileRouter.post("/add", upload.single("file"), async (req, res) => {
       size: size,
       user_id: req.user?.id || "",
     });
-    res.send({ msg: "success" });
+    res.send({ msg: "success", result });
   } else {
     res.send("an error occurred");
   }

@@ -10,11 +10,16 @@ profileRouter.get("/", isAuthenticated, async (req, res) => {
   if (req.user?.id) {
     const user = await getUserByID(req.user?.id);
     if (req.user && user) {
-      const { id, username, profile, role } = user;
-      res.send({ msg: "Success", user: { id, username, profile, role } });
+      const { id, username, profile, role, alias } = user;
+      res.send({
+        msg: "Success",
+        user: { id, username, profile, role, alias },
+      });
     } else {
       res.send({ msg: "Failed", user: {} });
     }
+  } else {
+    res.send({ msg: "Failed", user: {} });
   }
 });
 
@@ -24,14 +29,21 @@ profileRouter.post("/update", isAuthenticated, async (req, res) => {
   if (req.user?.id) {
     const user = await getUserByID(req.user?.id);
     if (req.user && user) {
-      updateUserByID(req.user?.id, { profile, alias });
+      const result = await updateUserByID(req.user?.id, { alias });
       res.send({
         msg: "Success",
-        user: { id, username, alias, profile, role: role },
+        user: {
+          username: result?.get("username"),
+          alias: result?.get("alias"),
+          role: result?.get("role"),
+          id: result?.get("id"),
+        },
       });
     } else {
       res.send({ msg: "Failed", user: {} });
     }
+  } else {
+    res.send({ msg: "Failed", user: {} });
   }
 });
 
@@ -44,5 +56,7 @@ profileRouter.delete("/", isAuthenticated, async (req, res) => {
     } else {
       res.send({ msg: "Failed", user: {} });
     }
+  } else {
+    res.send({ msg: "Failed", user: {} });
   }
 });

@@ -22,20 +22,20 @@ userRouter.get("/auto-signin", isAuthenticated, async (req, res) => {
     } else {
       res.send({ msg: "Failed", user: {} });
     }
+  } else {
+    res.send({ msg: "Failed", user: {} });
   }
 });
 
 userRouter.post(
   "/signin",
   passport.authenticate("local", {
-    keepSessionInfo: false,
     failureRedirect: "/login-failure",
   }),
   async function (req, res) {
     const user = await findUserByUsername(req.body.username);
     if (req.user && user?.id) {
       const { id, username, profile, alias } = user;
-      console.log("req.user", req.user);
       req.login(req.user, function (err) {
         if (err) {
           console.error(err);
@@ -63,7 +63,7 @@ userRouter.post("/signout", (req, res, next) => {
       return next(err);
     }
     res.clearCookie("connect.sid");
-    res.send("succ");
+    res.send({ msg: "Success", user: {} });
   });
 });
 

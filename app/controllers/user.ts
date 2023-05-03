@@ -40,12 +40,12 @@ export async function updateUserByID(id: number, data: UserI) {
   try {
     const User = await getUserByID(id);
     User?.set({ ...data });
-    await User?.save();
-    console.log("updated");
-    return true;
+    const updated = await User?.save();
+    console.log({ updateRes: updated?.toJSON() });
+    return updated;
   } catch (e) {
     console.log("could not update record", e);
-    return false;
+    return null;
   }
 }
 
