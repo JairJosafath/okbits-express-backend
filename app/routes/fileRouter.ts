@@ -74,8 +74,12 @@ fileRouter.post(
 );
 
 fileRouter.delete("/:id", isAuthorized.single, async (req, res) => {
-  if (req.user?.id && req.user)
-    res.send(deleteFileByID(parseInt(req.params.id), req.user?.id));
+  if (req.user?.id && req.user) {
+    const result = await deleteFileByID(parseInt(req.params.id), req.user?.id);
+    res.send({ msg: "success", result });
+  } else {
+    res.send({ msg: "failed" });
+  }
 });
 
 //user creates data, any user authenticated can perform this action
@@ -84,14 +88,14 @@ fileRouter.post("/add", upload.single("file"), async (req, res) => {
     const { originalname, buffer, size, destination, filename } = req.file;
 
     convertUNL(destination + `/${filename}`);
-    res.send;
-    addFile({
+    const result = await addFile({
       name: originalname,
       alias: `${req.user?.id}/files/${filename}`,
       path_unl: destination,
       size: size,
       user_id: req.user?.id || "",
     });
+    res.send({ msg: "success" });
   } else {
     res.send("an error occurred");
   }
