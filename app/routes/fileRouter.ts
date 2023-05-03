@@ -18,8 +18,11 @@ const upload = multer({ dest: "./storage" });
 export const fileRouter = express.Router();
 
 fileRouter.get("/:id", isAuthorized.single, async (req, res) => {
-  if (req.user?.id)
+  if (req.user?.id) {
     res.send(await getFileByID(parseInt(req.params.id), req.user?.id));
+  } else {
+    res.send({ msg: "failed" });
+  }
 });
 
 // this route uses the authenticated user id, so the owner can only see their own files
@@ -106,7 +109,11 @@ fileRouter.get("/storage/:filename", isAuthorized.storage, async (req, res) => {
   const { filename } = req.params;
   const dirname = path.resolve();
   const fullfilepath = path.join(dirname, "storage/" + filename);
-  return res.sendFile(fullfilepath);
+  try {
+    res.sendFile(fullfilepath);
+  } catch (e) {
+    res.send({ msg: "an error occured" });
+  }
 });
 
 fileRouter.post("/share/:id", isAuthorized.single, async (req, res) => {

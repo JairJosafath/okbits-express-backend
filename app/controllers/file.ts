@@ -24,7 +24,7 @@ export async function getFileByID(id: number, user_id: number | string) {
     if (!File) {
       console.log("record not found with id " + id);
     }
-    addAudit({
+    await addAudit({
       user_id: parseInt(user_id.toString()),
       action: `file with id ${id}, ${JSON.stringify(
         File
@@ -41,9 +41,10 @@ export async function getFilesByUser(userid: number, user_id: number | string) {
     const Files = await FileModel.findAll({ where: { user_id: userid } });
     if (Files.length < 1) {
       console.log("record not found with id " + userid);
+      return null;
     }
     console.log(Files, "files by user");
-    addAudit({
+    await addAudit({
       user_id: parseInt(user_id.toString()),
       action: `files with user id ${userid}, ${JSON.stringify(
         Files
@@ -52,8 +53,8 @@ export async function getFilesByUser(userid: number, user_id: number | string) {
     return Files;
   } catch (e) {
     console.log("could not retrieve record", e);
+    return null;
   }
-  return null;
 }
 
 export async function deleteFileByID(id: number, user_id: number | string) {
@@ -71,10 +72,11 @@ export async function deleteFileByID(id: number, user_id: number | string) {
     }
     await File?.destroy();
     console.log("deleted");
-    return await addAudit({
+    await addAudit({
       user_id: parseInt(user_id.toString()),
       action: `file with id ${id}, deleted from table: files`,
     });
+    return true;
   } catch (e) {
     console.log("could not delete record", e);
     return false;
