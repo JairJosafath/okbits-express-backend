@@ -12,7 +12,7 @@ import { profileRouter } from "./routes/profile.router";
 dotenv.config();
 const app = express();
 const corsOptions: cors.CorsOptions = {
-  origin: "https://okbits-47za.vercel.app",
+  origin: ["https://okbits-47za.vercel.app", "http://localhost:3000"],
   credentials: true,
 };
 app.use(cors(corsOptions));
