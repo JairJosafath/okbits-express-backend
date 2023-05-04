@@ -19,7 +19,7 @@ export const sequelize = new Sequelize(DB, USER, PASSWORD, {
   },
 });
 
-export async function connect() {
+export async function testdb() {
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");

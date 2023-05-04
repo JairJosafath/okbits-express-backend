@@ -9,6 +9,7 @@ import pgsession from "connect-pg-simple";
 import dotenv from "dotenv";
 import cors from "cors";
 import { profileRouter } from "./routes/profile.router";
+import { testdb } from "./config/db";
 dotenv.config();
 const app = express();
 const corsOptions: cors.CorsOptions = {
@@ -22,6 +23,7 @@ const psqlStore = new (pgsession(session))({
   conString: process.env.DATABASE_URL,
   tableName: "sessions",
 });
+testdb();
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
