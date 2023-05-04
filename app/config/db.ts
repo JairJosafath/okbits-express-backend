@@ -3,21 +3,7 @@ import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 dotenv.config();
 
-const DB = process.env.DB || "";
-const USER = process.env.USER || "";
-const HOST = process.env.HOST || "";
-const PASSWORD = process.env.PASSWORD || "";
-const PORT = parseInt(process.env.PORT || "");
-
-export const sequelize = new Sequelize(DB, USER, PASSWORD, {
-  host: HOST,
-  dialect: "postgres",
-  port: PORT,
-  define: {
-    createdAt: "createdat",
-    updatedAt: "updatedat",
-  },
-});
+const sequelize = new Sequelize(process.env.DATABASE_URL || "");
 
 export async function testdb() {
   try {
