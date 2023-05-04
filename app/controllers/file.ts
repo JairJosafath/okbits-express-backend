@@ -35,6 +35,27 @@ export async function getFileByID(id: number, user_id: number | string) {
     return null;
   }
 }
+export async function getFileByName(name: string, user_id: number | string) {
+  try {
+    const File = await FileModel.sequelize?.query(
+      `SELECT * FROM files WHERE name LIKE '%${name}%' AND user_id=${user_id};`
+    );
+    const temp: any = File;
+    if (!File) {
+      console.log("record not found with id " + name);
+    }
+    await addAudit({
+      user_id: parseInt(user_id.toString()),
+      action: `file with name containing ${name}, ${JSON.stringify(
+        File
+      )} retrieved from table: files via Search`,
+    });
+    return temp[0];
+  } catch (e) {
+    console.log("could not retrieve record", e);
+    return null;
+  }
+}
 export async function getFilesByUser(userid: number, user_id: number | string) {
   try {
     const Files = await FileModel.findAll({ where: { user_id: userid } });

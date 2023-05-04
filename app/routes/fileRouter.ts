@@ -4,6 +4,7 @@ import {
   addFile,
   deleteFileByID,
   getFileByID,
+  getFileByName,
   getFilesByUser,
   updateFileByID,
 } from "../controllers/file";
@@ -153,5 +154,13 @@ fileRouter.post("/share/:id", isAuthorized.single, async (req, res) => {
     }
     const resp = shareEmail({ ...email, attachments });
     res.send(resp);
+  }
+});
+
+fileRouter.get("/search/:filename", async (req, res) => {
+  if (req.params.filename && req.user?.id) {
+    res.send(await getFileByName(req.params.filename, req.user?.id));
+  } else {
+    res.send({ msg: "failed" });
   }
 });
