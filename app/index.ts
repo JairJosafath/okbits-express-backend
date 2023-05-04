@@ -7,15 +7,15 @@ import session from "express-session";
 import "./config/passport";
 import pgsession from "connect-pg-simple";
 import dotenv from "dotenv";
-import cors from "cors";
+// import cors from "cors";
 import { profileRouter } from "./routes/profile.router";
 dotenv.config();
 const app = express();
-const corsOptions = {
-  origin: "http://localhost:3000",
-  credentials: true,
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: "http://localhost:3000",
+//   credentials: true,
+// };
+// app.use(cors(corsOptions));
 const port = 3001;
 
 const psqlStore = new (pgsession(session))({
