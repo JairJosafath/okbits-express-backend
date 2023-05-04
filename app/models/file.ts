@@ -53,6 +53,7 @@ FileModel.init(
   },
   {
     sequelize,
+    timestamps: true,
     modelName: "File",
     tableName: "files",
   }

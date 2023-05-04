@@ -29,6 +29,7 @@ AuditModel.init(
   },
   {
     sequelize,
+    timestamps: true,
     modelName: "Audit",
     tableName: "audit",
   }

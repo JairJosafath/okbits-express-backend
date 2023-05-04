@@ -31,6 +31,7 @@ SessionModel.init(
   },
   {
     sequelize,
+    timestamps: true,
     modelName: "Session",
     tableName: "sessions",
   }
