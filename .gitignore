@@ -29,7 +29,10 @@ dist/
 
 # dotenv environment variables file
 .env
+app/.env
 
 # OS generated files
 .DS_Store
 Thumbs.db
+
+storage/
